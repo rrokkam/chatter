@@ -1,5 +1,0 @@
-client.c
-network_parser.c
-protocol_old.c
-stdin_parser.c
-wrappers.c

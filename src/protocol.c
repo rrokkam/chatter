@@ -1,6 +1,7 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "protocol.h"
 
 keyword_t keyword_buf;

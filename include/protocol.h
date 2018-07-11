@@ -1,40 +1,23 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
-/*
- * Information about the protocol implemented here is available in PROTOCOL.md.
- */
+#include <stdbool.h>
+#include "network_parser.h"
 
-#define MAX_NAME_LEN 16
-#define MAX_MESSAGE_LEN (256 - MAX_NAME_LEN - sizeof(keyword_t))
+void from_handler(int sockfd, msg_t *from_msg);
 
-/* 
- * To add a new message type, add it here and update the utility functions
- * in protocol.c
- */
-typedef enum {
-	LGIN,  // log in
-	MOTD,  // message of the day
-	EUSR,  // invalid user provided
-	LIST,  // list online users
-	SEND,  // send message
-	RECV,  // receive message
-	LGOT   // log out
-} keyword_t;
+void uoff_handler(msg_t *uoff_msg);
 
-void init();
-void fini();
+msg_t *recv_handle(int sockfd, int num_expected, ...);
 
-/* Utility functions in protocol.c */
+int client_connect(char *server_ip, int server_port);
 
-// bool expect_name(keyword_t keyword);
-// bool expect_message(keyword_t keyword);
-// void send_with_length(int sockfd, char *buf);
-// void recv_with_length(int sockfd, char *buf);
+void login(int sockfd, char *name);
 
-// abort the program if we fail a send or receive?
-// shouldn't send name or message longer than MAX_NAME_LEN or MAX_MESSAGE_LEN respectively.
-void send_message(int sockfd, keyword_t keyword, char *name, char *message);
-void recv_message(int sockfd, keyword_t *keyword, char **name, char **message);
+void list(int sockfd);
+
+void message(int sockfd, char *name, char *message);
+
+void logout(int sockfd);
 
 #endif

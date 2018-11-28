@@ -5,30 +5,20 @@
 #include "new_protocol.h"
 
 keyword_t keyword_buf;
-char *name_buf;
-char *message_buf;
-
-void init() {
-	name_buf = malloc(MAX_NAME_LEN);
-	message_buf = malloc(MAX_MESSAGE_LEN);
-}
-
-void fini() {
-	free(name_buf);
-	free(message_buf);
-}
+char name_buf[MAX_NAME_LEN];
+char message_buf[MAX_MESSAGE_LEN];
 
 bool expect_name(keyword_t keyword) {
 	switch (keyword) {
 		case LGIN: case EUSR: case SEND: case RECV: case LGOT: return true;
-		case MOTD: case LIST: return false;
+		case LIST: return false;
 		default: return false;
 	}
 }
 
 bool expect_message(keyword_t keyword) {
 	switch (keyword) {
-		case MOTD: case LIST: case SEND: return true;
+		case LIST: case SEND: return true;
 		case LGIN: case EUSR: case RECV: case LGOT: return false;
 		default: return false;
 	}
@@ -47,7 +37,6 @@ void recv_with_length(int sockfd, char *buf) {
 }
 
 // need to add handling for when send/recv return an error
-// where to do the length checking for arguments?
 void send_message(int sockfd, keyword_t keyword, char *name, char *message) {
 	send(sockfd, &keyword, sizeof(keyword_t), 0);
 	if (expect_name(keyword)) {
